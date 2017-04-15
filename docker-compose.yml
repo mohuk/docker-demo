@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  app:
+    container_name: nodeapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - "yarn-cache:/root/.cache/yarn"
+      - "./app:/usr/app/src/app"
+    ports:
+      - "3000:3000"
+    links:
+      - postgres
+#      - memcached
+
+  postgres:
+    image: postgres:9-alpine
+    container_name: postgresdb
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    ports:
+      - "5432"
+    environment:
+     - POSTGRES_USER=demo
+     - POSTGRES_PASSWORD=demo
+     - POSTGRES_DB=demodb
+
+volumes:
+  yarn-cache:
+  postgres:
+
