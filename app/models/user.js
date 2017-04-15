@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const sequelize = require('../bootstrap/sequelize');
 
 const User = sequelize.define('user', {

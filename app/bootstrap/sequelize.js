@@ -8,7 +8,7 @@ const dbConfig = {
   host: 'postgres',
   port: '5432'
 };
-const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.password, {
+const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.pass, {
   host: dbConfig.host,
   port: dbConfig.port,
   dialect: 'postgres',
