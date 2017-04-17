@@ -11,8 +11,6 @@ const users = require('./routes/users');
 const app = express();
 
 //db setup
-require('./bootstrap/sequelize');
-require('./cache-build');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
