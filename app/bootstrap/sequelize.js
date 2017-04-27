@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
 
-
 const dbConfig = {
-  name: 'demodb',
-  user: 'demo',
-  pass: 'demo',
-  host: 'postgres',
-  port: '5432'
+  name: process.env.POSTGRES_DB || 'demodb',
+  user: process.env.POSTGRES_USER || 'demo',
+  pass: process.env.POSTGRES_PASS || 'demo',
+  host: process.env.POSTGRES_HOST || 'postgres',
+  port: process.env.POSTGRES_PORT || '5432'
 };
+
 const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.pass, {
   host: dbConfig.host,
   port: dbConfig.port,

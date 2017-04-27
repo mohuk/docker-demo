@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - development.env
     volumes:
       - ".:/usr/app/src"
       - "yarn-cache:/root/.cache/yarn"

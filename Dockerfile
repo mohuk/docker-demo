@@ -1,9 +1,11 @@
-FROM mohuk/node-python:7.7-2.7.12-alpine
+FROM node:7.9.0-alpine
 
+RUN mkdir -p /usr/app/src
 WORKDIR /usr/app/src
+COPY package.json yarn.lock ./
+RUN yarn
 
 COPY . /usr/app/src
-RUN yarn
 
 EXPOSE 3000
 CMD ["DEBUG=docker-demo:*"]
