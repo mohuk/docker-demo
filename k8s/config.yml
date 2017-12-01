@@ -1,0 +1,116 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: demo-memcached
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: demo-memcached
+    spec:
+      containers:
+      - name: demo-memcached
+        image: memcached:1.4-alpine
+        ports:
+        - containerPort: 11211
+          name: demo-memcached
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-memcached
+spec:
+  ports:
+  - port: 11211
+  selector:
+    app: demo-memcached
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: demo-postgres
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: demo-postgres
+    spec:
+      containers:
+      - name: demo-postgres
+        image: postgres:9-alpine
+        ports:
+        - containerPort: 5432
+          name: demo-postgres
+        env:
+        - name: POSTGRES_USER
+          value: "demo"
+        - name: POSTGRES_PASSWORD
+          value: "demo"
+        - name: POSTGRES_DB
+          value: demodb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-postgres
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: demo-postgres
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: demo-node
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: demo-node
+    spec:
+      containers:
+      - name: demo-node
+        image: mohuk/docker-demo
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: POSTGRES_HOST
+          value: "demo-postgres"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: "demodb"
+        - name: POSTGRES_USER
+          value: "demo"
+        - name: POSTGRES_PASS
+          value: "demo"
+        - name: MEMCACHED_HOST
+          value: "demo-memcached"
+        - name: MEMCACHED_PORT
+          value: "11211"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-node
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: demo-node
